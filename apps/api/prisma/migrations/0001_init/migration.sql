@@ -1,0 +1,1 @@
+-- Prisma migration placeholder. Run `pnpm --filter @notplace/api prisma:migrate` to generate SQL from schema.
