@@ -1,22 +1,13 @@
-import type { ReactNode } from 'react';
-import { Manrope } from 'next/font/google';
 import './globals.css';
-import { Nav } from '../components/nav';
-
-const manrope = Manrope({ subsets: ['latin', 'cyrillic'] });
+import type { ReactNode } from 'react';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ru">
-      <body className={manrope.className}>
+      <body>
         <div className="container">
-          <header className="card header">
-            <div>
-              <h1>NotPlace</h1>
-              <p>RU-only marketplace цифровых товаров и услуг (mock mode)</p>
-            </div>
-            <Nav />
-          </header>
+          <h1>NotPlace</h1>
+          <p>RU-only маркетплейс цифровых товаров (RUB + escrow)</p>
           {children}
         </div>
       </body>

@@ -3,34 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>NotPlace — RU marketplace</title>
+  <title>NotPlace</title>
   <style>
-    :root { color-scheme: dark; }
-    body { margin:0; font-family: Inter, ui-sans-serif, system-ui; background:#0b0620; color:#fff; }
+    body { margin:0; font-family: ui-sans-serif, system-ui; background:#0b0620; color:#fff; }
     .wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px; }
-    .card { max-width:860px; width:100%; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:22px; padding:30px; box-shadow:0 20px 80px rgba(13,4,35,.5); }
-    h1 { margin:0 0 8px; font-size:40px; }
-    p { margin:0 0 12px; opacity:.88; line-height:1.6; }
-    .row { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
-    .btn { display:inline-block; padding:10px 14px; border-radius:12px; border:1px solid rgba(124,58,237,.45); background:rgba(124,58,237,.2); color:#fff; text-decoration:none; }
-    .btn:hover { background:rgba(124,58,237,.35); }
-    .tag { display:inline-block; padding:6px 10px; border-radius:999px; background:rgba(124,58,237,.3); border:1px solid rgba(124,58,237,.45); font-size:12px; margin-top:8px; }
+    .card { max-width:760px; width:100%; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+      border-radius:18px; padding:28px; }
+    h1 { margin:0 0 10px; font-size:34px; letter-spacing:.2px; }
+    p { margin:0 0 10px; opacity:.85; line-height:1.5; }
+    .tag { display:inline-block; padding:6px 10px; border-radius:999px; background:rgba(124,58,237,.25);
+      border:1px solid rgba(124,58,237,.45); font-size:13px; margin-top:12px; }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <main class="card">
+    <div class="card">
       <h1>NotPlace</h1>
-      <p>RU-only маркетплейс цифровых товаров/услуг с escrow, диспутами, кошельком RUB и ролевой модерацией.</p>
-      <p>Это гарантированный fallback для Cloudflare Pages: сайт не будет отдавать пустой 404, даже если сборка фронта не прошла.</p>
-      <div class="tag">Landing fallback</div>
-      <div class="row">
-        <a class="btn" href="/catalog/">Каталог</a>
-        <a class="btn" href="/auth/">Войти</a>
-        <a class="btn" href="/seller/">Стать продавцом</a>
-        <a class="btn" href="/admin/">Админка (заглушка)</a>
-      </div>
-    </main>
+      <p>RU-only marketplace цифровых товаров/услуг с escrow (manual fulfillment), диспутами, кошельком (RUB) и RBAC.</p>
+      <p>Сборка идёт. Скоро будет нормальный фронт.</p>
+      <div class="tag">Coming soon</div>
+    </div>
   </div>
 </body>
 </html>

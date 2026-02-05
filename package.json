@@ -10,10 +10,6 @@
     "dev": "pnpm -r --parallel dev",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
-    "lint": "pnpm -r lint",
-    "dev:web": "pnpm --filter @notplace/web dev",
-    "build:web": "pnpm --filter @notplace/web build",
-    "export:web": "pnpm --filter @notplace/web export",
-    "pages:build": "node scripts/pages-build.mjs"
+    "lint": "pnpm -r lint"
   }
 }
