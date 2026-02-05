@@ -1,0 +1,261 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  CREATED
+  PAID_WAITING_BUYER_DATA
+  IN_PROGRESS
+  DELIVERED_PENDING_CONFIRMATION
+  COMPLETED
+  CANCELLED
+  DISPUTED
+  REFUNDED
+}
+
+model User {
+  id                 String            @id @default(cuid())
+  username           String            @unique
+  email              String            @unique
+  phone              String            @unique
+  passwordHash       String
+  verified           Boolean           @default(false)
+  roles              String[]
+  sellerScore        Int               @default(0)
+  warningCount       Int               @default(0)
+  bannedAt           DateTime?
+  withdrawalBanUntil DateTime?
+  createdAt          DateTime          @default(now())
+  sessions           Session[]
+  listings           Listing[]
+  buyerOrders        Order[]           @relation("buyerOrders")
+  sellerOrders       Order[]           @relation("sellerOrders")
+  wallet             WalletAccount?
+  notifications      Notification[]
+  telegramLink       TelegramLink?
+  reviewsGiven       Review[]          @relation("reviewAuthor")
+  reviewsReceived    Review[]          @relation("reviewSeller")
+  moderationActions  ModerationAction[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  userAgent String
+  ip        String?
+  createdAt DateTime @default(now())
+  revokedAt DateTime?
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  games     Game[]
+}
+
+model Game {
+  id             String    @id @default(cuid())
+  name           String
+  slug           String    @unique
+  country        String
+  currency       String
+  coverUrl       String?
+  description    String?
+  faq            String?
+  requiredFields String[]
+  categoryId     String?
+  category       Category? @relation(fields: [categoryId], references: [id])
+  listings       Listing[]
+}
+
+model Listing {
+  id                  String       @id @default(cuid())
+  sellerId            String
+  gameId              String
+  title               String
+  description         String
+  priceRub            Decimal      @db.Decimal(12, 2)
+  slaPreset           String
+  guaranteePreset     String
+  warningText         String?
+  needsBuyerData      Boolean      @default(true)
+  instantDeliveryFlag Boolean      @default(false)
+  isHidden            Boolean      @default(false)
+  createdAt           DateTime     @default(now())
+  seller              User         @relation(fields: [sellerId], references: [id])
+  game                Game         @relation(fields: [gameId], references: [id])
+  snapshots           LotSnapshot[]
+  orders              Order[]
+}
+
+model LotSnapshot {
+  id              String   @id @default(cuid())
+  listingId       String
+  title           String
+  description     String
+  priceRub        Decimal  @db.Decimal(12, 2)
+  slaPreset       String
+  guaranteePreset String
+  warningText     String?
+  createdAt       DateTime @default(now())
+  listing         Listing  @relation(fields: [listingId], references: [id])
+}
+
+model Order {
+  id                   String       @id @default(cuid())
+  listingId            String
+  buyerId              String
+  sellerId             String
+  snapshotId           String
+  status               OrderStatus
+  amountRub            Decimal      @db.Decimal(12, 2)
+  buyerFeeRub          Decimal      @db.Decimal(12, 2)
+  buyerDataDeadline    DateTime?
+  confirmationDeadline DateTime?
+  inactiveDeadline     DateTime?
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+  listing              Listing      @relation(fields: [listingId], references: [id])
+  buyer                User         @relation("buyerOrders", fields: [buyerId], references: [id])
+  seller               User         @relation("sellerOrders", fields: [sellerId], references: [id])
+  snapshot             LotSnapshot  @relation(fields: [snapshotId], references: [id])
+  events               OrderEvent[]
+  chat                 Chat?
+  dispute              Dispute?
+}
+
+model OrderEvent {
+  id        String   @id @default(cuid())
+  orderId   String
+  eventType String
+  payload   Json
+  createdAt DateTime @default(now())
+  order     Order    @relation(fields: [orderId], references: [id])
+}
+
+model Chat {
+  id        String    @id @default(cuid())
+  orderId   String?   @unique
+  buyerId   String
+  sellerId  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  order     Order?    @relation(fields: [orderId], references: [id])
+  messages  Message[]
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  chatId    String
+  senderId  String
+  type      String
+  text      String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  chat      Chat     @relation(fields: [chatId], references: [id])
+}
+
+model Dispute {
+  id          String   @id @default(cuid())
+  orderId      String   @unique
+  reason       String
+  status       String
+  buyerVideoDue DateTime?
+  sellerReplyDue DateTime?
+  resolution   String?
+  createdAt    DateTime @default(now())
+  order        Order    @relation(fields: [orderId], references: [id])
+}
+
+model WalletAccount {
+  id          String        @id @default(cuid())
+  userId       String        @unique
+  availableRub Decimal       @default(0) @db.Decimal(12, 2)
+  heldRub      Decimal       @default(0) @db.Decimal(12, 2)
+  refundRub    Decimal       @default(0) @db.Decimal(12, 2)
+  user         User          @relation(fields: [userId], references: [id])
+  entries      LedgerEntry[]
+  payouts      Payout[]
+}
+
+model LedgerEntry {
+  id          String        @id @default(cuid())
+  accountId   String
+  orderId     String?
+  direction   String
+  bucket      String
+  amountRub   Decimal       @db.Decimal(12, 2)
+  description String
+  createdAt   DateTime      @default(now())
+  account     WalletAccount @relation(fields: [accountId], references: [id])
+}
+
+model Payout {
+  id          String        @id @default(cuid())
+  accountId   String
+  amountRub   Decimal       @db.Decimal(12, 2)
+  feeRub      Decimal       @db.Decimal(12, 2)
+  status      String
+  createdAt   DateTime      @default(now())
+  account     WalletAccount @relation(fields: [accountId], references: [id])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  orderId   String   @unique
+  authorId  String
+  sellerId  String
+  rating    Float
+  text      String
+  createdAt DateTime @default(now())
+  author    User     @relation("reviewAuthor", fields: [authorId], references: [id])
+  seller    User     @relation("reviewSeller", fields: [sellerId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  title     String
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model TelegramLink {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  code      String   @unique
+  telegramId String?
+  linkedAt  DateTime?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model ReportComplaint {
+  id          String   @id @default(cuid())
+  reporterId  String
+  targetType  String
+  targetId    String
+  reason      String
+  createdAt   DateTime @default(now())
+}
+
+model ModerationAction {
+  id          String   @id @default(cuid())
+  moderatorId String
+  targetUserId String?
+  targetOrderId String?
+  actionType  String
+  reason      String
+  createdAt   DateTime @default(now())
+  moderator   User     @relation(fields: [moderatorId], references: [id])
+}
