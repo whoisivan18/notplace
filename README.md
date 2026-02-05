@@ -80,3 +80,4 @@
 - Rate limit для auth endpoints (in-memory guard).
 - RBAC + Owner bootstrap (первый пользователь).
 - Audit log для admin-действий (через `ModerationAction`).
+<!-- redeploy -->
