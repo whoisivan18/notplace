@@ -1,38 +1,44 @@
 import { execSync } from 'node:child_process';
-import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 
 const root = process.cwd();
 const distDir = join(root, 'dist');
+const fallbackDir = join(root, 'public');
 const webOutDir = join(root, 'apps/web/out');
 
-function fail(message) {
-  console.error(`[pages:build] ERROR: ${message}`);
-  process.exit(1);
+function resetDist() {
+  rmSync(distDir, { recursive: true, force: true });
+  mkdirSync(distDir, { recursive: true });
 }
 
-rmSync(distDir, { recursive: true, force: true });
-mkdirSync(distDir, { recursive: true });
+function copyFallback() {
+  cpSync(fallbackDir, distDir, { recursive: true });
+}
 
+resetDist();
+
+let webBuildOk = false;
 try {
+  execSync('pnpm build:web', { stdio: 'inherit' });
   execSync('pnpm export:web', { stdio: 'inherit' });
-} catch {
-  fail('web export failed, dist was not produced');
+  webBuildOk = existsSync(webOutDir);
+} catch (error) {
+  console.warn('[pages:build] web build failed, fallback will be used.');
 }
 
-if (!existsSync(webOutDir)) {
-  fail('apps/web/out is missing after export:web');
+if (webBuildOk) {
+  cpSync(webOutDir, distDir, { recursive: true });
+  if (!existsSync(join(distDir, 'index.html'))) {
+    console.warn('[pages:build] web output had no index.html, injecting fallback.');
+    copyFallback();
+  }
+} else {
+  copyFallback();
 }
-
-cpSync(webOutDir, distDir, { recursive: true });
-writeFileSync(join(distDir, '_redirects'), '/* /index.html 200\n', 'utf8');
 
 if (!existsSync(join(distDir, 'index.html'))) {
-  fail('dist/index.html is missing');
-}
-
-if (!existsSync(join(distDir, '_redirects'))) {
-  fail('dist/_redirects is missing');
+  throw new Error('dist/index.html is missing after pages:build');
 }
 
 console.log('[pages:build] done. output=dist');

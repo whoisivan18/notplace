@@ -1,21 +1,13 @@
-import type { ReactNode } from 'react';
 import './globals.css';
-import { Nav } from '../components/nav';
+import type { ReactNode } from 'react';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ru">
       <body>
         <div className="container">
-          <header className="card header">
-            <div>
-              <h1 style={{ margin: 0 }}>NotPlace</h1>
-              <p className="meta" style={{ margin: '6px 0 0' }}>
-                RU-only маркетплейс цифровых товаров и услуг с escrow (mock preview для Pages)
-              </p>
-            </div>
-            <Nav />
-          </header>
+          <h1>NotPlace</h1>
+          <p>RU-only маркетплейс цифровых товаров (RUB + escrow)</p>
           {children}
         </div>
       </body>
