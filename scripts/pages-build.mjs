@@ -20,6 +20,7 @@ resetDist();
 
 let webBuildOk = false;
 try {
+  execSync('pnpm build:web', { stdio: 'inherit' });
   execSync('pnpm export:web', { stdio: 'inherit' });
   webBuildOk = existsSync(webOutDir);
 } catch (error) {

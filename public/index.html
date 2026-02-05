@@ -3,55 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>NotPlace — цифровой marketplace</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <title>NotPlace</title>
   <style>
-    :root{color-scheme:dark}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Manrope,system-ui;background:
-      radial-gradient(1200px 500px at 20% -10%, rgba(143,91,255,.24), transparent 70%),
-      radial-gradient(900px 420px at 95% -5%, rgba(111,66,255,.22), transparent 70%),
-      linear-gradient(180deg,#130a2b,#09051a 55%);color:#f7f0ff}
-    .container{max-width:1180px;margin:0 auto;padding:24px}
-    .card{background:rgba(27,16,52,.78);border:1px solid rgba(191,157,255,.24);border-radius:18px;padding:18px;backdrop-filter:blur(6px)}
-    .header{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
-    .nav{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{display:inline-block;padding:10px 14px;border-radius:12px;border:1px solid rgba(139,92,246,.5);background:linear-gradient(180deg,#4a2c92,#352069);color:#fff;text-decoration:none}
-    .btn:hover{filter:brightness(1.1)}
-    h1{font-size:clamp(34px,5vw,56px);margin:0 0 10px;line-height:1.05}
-    .muted{color:#c3afea}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
-    .pill{display:inline-block;padding:6px 10px;border:1px solid rgba(139,92,246,.5);border-radius:999px;background:rgba(98,65,179,.35)}
+    body { margin:0; font-family: ui-sans-serif, system-ui; background:#0b0620; color:#fff; }
+    .wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px; }
+    .card { max-width:760px; width:100%; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1);
+      border-radius:18px; padding:28px; }
+    h1 { margin:0 0 10px; font-size:34px; letter-spacing:.2px; }
+    p { margin:0 0 10px; opacity:.85; line-height:1.5; }
+    .tag { display:inline-block; padding:6px 10px; border-radius:999px; background:rgba(124,58,237,.25);
+      border:1px solid rgba(124,58,237,.45); font-size:13px; margin-top:12px; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header class="card header" style="margin-bottom:14px">
-      <div>
-        <strong style="font-size:20px">NotPlace</strong>
-        <div class="muted">RU-only digital marketplace</div>
-      </div>
-      <nav class="nav">
-        <a class="btn" href="/catalog/">Каталог</a>
-        <a class="btn" href="/auth/">Войти</a>
-        <a class="btn" href="/seller/">Стать продавцом</a>
-        <a class="btn" href="/admin/">Админка</a>
-      </nav>
-    </header>
-
-    <section class="card" style="margin-bottom:14px">
-      <h1>Безопасные digital-сделки с escrow</h1>
-      <p class="muted">Покупки в RUB, ручное исполнение, диспуты, модерация и прозрачные правила. Этот экран — надежный fallback для Cloudflare Pages, но уже с нормальным UI и кликабельными кнопками.</p>
-      <div class="pill">Pages fallback UI</div>
-    </section>
-
-    <section class="grid">
-      <article class="card"><h3>Каталог</h3><p class="muted">Подписки, донаты, игровые сервисы и официальные покупки.</p></article>
-      <article class="card"><h3>Escrow</h3><p class="muted">5 минут на данные, 2 часа на подтверждение, безопасные расчёты.</p></article>
-      <article class="card"><h3>RUB-only</h3><p class="muted">Единый рублёвый баланс и предсказуемые комиссии.</p></article>
-    </section>
+  <div class="wrap">
+    <div class="card">
+      <h1>NotPlace</h1>
+      <p>RU-only marketplace цифровых товаров/услуг с escrow (manual fulfillment), диспутами, кошельком (RUB) и RBAC.</p>
+      <p>Сборка идёт. Скоро будет нормальный фронт.</p>
+      <div class="tag">Coming soon</div>
+    </div>
   </div>
 </body>
 </html>
